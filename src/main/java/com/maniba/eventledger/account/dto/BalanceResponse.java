@@ -1,7 +1,12 @@
 package com.maniba.eventledger.account.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Setter
+@Getter
 public class BalanceResponse {
     private String accountId;
     private BigDecimal balance;
@@ -15,10 +20,4 @@ public class BalanceResponse {
         this.currency = currency;
     }
 
-    public String getAccountId() { return accountId; }
-    public void setAccountId(String accountId) { this.accountId = accountId; }
-    public BigDecimal getBalance() { return balance; }
-    public void setBalance(BigDecimal balance) { this.balance = balance; }
-    public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
 }

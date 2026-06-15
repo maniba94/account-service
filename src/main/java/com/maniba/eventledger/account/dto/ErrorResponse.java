@@ -1,7 +1,12 @@
 package com.maniba.eventledger.account.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.Instant;
 
+@Setter
+@Getter
 public class ErrorResponse {
     private String error;
     private String message;
@@ -17,12 +22,4 @@ public class ErrorResponse {
         this.timestamp = timestamp;
     }
 
-    public String getError() { return error; }
-    public void setError(String error) { this.error = error; }
-    public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
-    public String getTraceId() { return traceId; }
-    public void setTraceId(String traceId) { this.traceId = traceId; }
-    public Instant getTimestamp() { return timestamp; }
-    public void setTimestamp(Instant timestamp) { this.timestamp = timestamp; }
 }

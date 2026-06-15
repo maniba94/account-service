@@ -1,13 +1,19 @@
 package com.maniba.eventledger.account.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "accounts", indexes = {}, uniqueConstraints = {@UniqueConstraint(columnNames = {"account_id"})})
 public class Account {
 
+    // getters and setters
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,17 +57,4 @@ public class Account {
         this.updatedAt = Instant.now();
     }
 
-    // getters and setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getAccountId() { return accountId; }
-    public void setAccountId(String accountId) { this.accountId = accountId; }
-    public BigDecimal getCurrentBalance() { return currentBalance; }
-    public void setCurrentBalance(BigDecimal currentBalance) { this.currentBalance = currentBalance; }
-    public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
-    public Instant getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
-    public Instant getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
 }

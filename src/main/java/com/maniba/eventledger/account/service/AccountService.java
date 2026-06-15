@@ -106,6 +106,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public BalanceResponse getBalance(String accountId) {
+        log.info("getBalance request received: accountId={}", accountId);
         Account account = accountRepository.findByAccountId(accountId)
                 .orElseThrow(() -> {
                     log.warn("account lookup failed for balance: accountId={}", accountId);
@@ -116,6 +117,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public AccountResponse getAccount(String accountId) {
+        log.info("getAccount request received: accountId={}", accountId);
         Account account = accountRepository.findByAccountId(accountId)
                 .orElseThrow(() -> {
                     log.warn("account lookup failed for account details: accountId={}", accountId);

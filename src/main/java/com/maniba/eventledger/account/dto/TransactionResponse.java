@@ -1,8 +1,13 @@
 package com.maniba.eventledger.account.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
+@Setter
+@Getter
 public class TransactionResponse {
     private String eventId;
     private String type;
@@ -20,14 +25,4 @@ public class TransactionResponse {
         this.eventTimestamp = eventTimestamp;
     }
 
-    public String getEventId() { return eventId; }
-    public void setEventId(String eventId) { this.eventId = eventId; }
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
-    public BigDecimal getAmount() { return amount; }
-    public void setAmount(BigDecimal amount) { this.amount = amount; }
-    public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency; }
-    public Instant getEventTimestamp() { return eventTimestamp; }
-    public void setEventTimestamp(Instant eventTimestamp) { this.eventTimestamp = eventTimestamp; }
 }

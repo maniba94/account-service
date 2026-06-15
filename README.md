@@ -2,16 +2,23 @@
 
 Internal Spring Boot service for account balances and transaction history.
 
-## Overview
+## Architecture Overview
 
-- Java 17, Spring Boot 3.5.15
-- Spring Web, Spring Data JPA, H2 in-memory database
-- Validation, Actuator, JUnit 5
-- Exposes internal REST APIs for account transaction processing, balance lookup, and account details
-- Enforces idempotency with unique `eventId`
-- Logs and propagates `X-Trace-Id`
+The `account-service` is an internal microservice in an event ledger ecosystem. It is called by a separate public `event-gateway-service` that accepts client transaction events and forwards them to this service.
 
-## Build
+- `event-gateway-service` (external/public): receives client transaction requests, validates them, and routes them to `account-service`.
+- `account-service` (internal): stores account balances and transaction history, protects against duplicate processing using `eventId`, and exposes account/balance APIs for internal consumption.
+
+The two services interact over REST. The gateway forwards transaction events to `account-service` and propagates `X-Trace-Id` for distributed tracing.
+
+## Prerequisites
+
+- Java 17 installed
+- Docker installed for containerized execution (optional)
+- Git installed to clone the repository
+- No manual dependency installation is required; Gradle wrapper downloads dependencies automatically
+
+## Setup
 
 From the project root:
 
@@ -19,23 +26,21 @@ From the project root:
 ./gradlew clean build
 ```
 
-## Test
+This command downloads dependencies, compiles the code, and runs the build lifecycle.
 
-Run unit and integration tests:
+## Running the Account Service
 
-```bash
-./gradlew test
-```
+### Manual
 
-## Run
+From the project root:
 
 ```bash
 ./gradlew bootRun
 ```
 
-The service listens on port `8081`.
+The service starts on port `8081` by default.
 
-## Docker
+### Docker
 
 Build the image:
 
@@ -47,6 +52,38 @@ Run the container:
 
 ```bash
 docker run --rm -p 8081:8081 account-service
+```
+
+## Running Both Services
+
+Because this repository contains only the internal `account-service`, start the `event-gateway-service` from its own repository or environment. Then run the `account-service` on `http://localhost:8081`.
+
+A sample `docker-compose.yml` for local integration could look like:
+
+```yaml
+version: '3.9'
+services:
+  account-service:
+    build: .
+    ports:
+      - '8081:8081'
+
+  event-gateway-service:
+    image: event-gateway-service
+    ports:
+      - '8080:8080'
+    environment:
+      ACCOUNT_SERVICE_URL: http://account-service:8081
+```
+
+> Note: the actual `event-gateway-service` Docker image and configuration are managed in the gateway repository.
+
+## Tests
+
+Run unit and integration tests with Gradle:
+
+```bash
+./gradlew test
 ```
 
 ## API Endpoints
@@ -78,6 +115,16 @@ Request body:
 ### Health
 
 `GET /accounts/health`
+
+## Resiliency Pattern
+
+The service uses idempotent transaction processing as its primary resiliency pattern. By enforcing unique `eventId` values and storing processed transaction history, duplicate submissions do not change account balances and the service remains consistent under retry scenarios.
+
+Additional resilience features include:
+
+- `X-Trace-Id` propagation for request correlation and observability
+- internal REST contract stability between the gateway and account service
+- a health endpoint for readiness and liveness checks
 
 ## Notes
 
